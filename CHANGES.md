@@ -1,8 +1,8 @@
 # Changes
-- This is a [CHANGES.md](https://go.s3d.club/changes/) file
+Recently completed and planned work is tracked here.
 
-## [0.0.1](https://go.s3d.club/terraform-aws-site/work/0.0.1)
-- **TODO** Initial version
+## [0.0.1](.) [0.0.13](.)
+- Created first versions
 
-## [Next](https://go.s3d.club/terraform-aws-site/next)
-- **TODO** Planning
+## [0.1.0](.)
+- Completed 1st release
