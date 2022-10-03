@@ -11,10 +11,10 @@ locals {
   index_html_source = "${path.module}/index.html"
   kms_key_id        = null
   log_bucket        = "${local.www_bucket}-log"
-  name_prefix       = module.name.name_prefix
+  name_prefix       = module.name.prefix
   s3_origin_id      = "s3"
   tags              = module.name.tags
-  waf               = try(module.waf_1[0], null)
+  waf               = try(module.waf[0], null)
   waf_arn           = var.waf_arn == null ? try(local.waf.arn, null) : var.waf_arn
   website           = "https://${local.www_domain}"
   www_domain        = "${var.cloudfront}.${var.domain}"
@@ -60,7 +60,7 @@ locals {
 module "acm" {
   count      = var.acm_arn == null ? 1 : 0
   depends_on = [aws_route53_record.ns]
-  source     = "git::https://github.com/s3d-club/terraform-aws-acm?ref=v0.1.0"
+  source     = "github.com/s3d-club/terraform-aws-acm?ref=v0.1.1"
 
   domain  = local.www_domain
   tags    = local.tags
@@ -68,20 +68,21 @@ module "acm" {
 }
 
 module "name" {
-  source       = "git::https://github.com/s3d-club/terraform-external-data-name-tags?ref=v0.1.0"
-  name_prefix  = var.cloudfront
-  name_segment = var.domain
-  path         = path.module
-  tags         = var.tags
+  source = "github.com/s3d-club/terraform-external-name?ref=v0.1.1"
+
+  context = join(".", [var.cloudfront, var.domain])
+  path    = path.module
+  tags    = var.tags
 }
 
-module "waf_1" {
-  count  = local.waf_input || local.waf_not_needed ? 0 : var.enable_waf ? 1 : 0
-  source = "git::https://github.com/s3d-club/terraform-aws-waf?ref=v0.1.0"
+module "waf" {
+  count  = var.enable_waf ? 1 : 0
+  source = "github.com/s3d-club/terraform-aws-waf?ref=v0.1.1"
 
   ip_blacklist = var.ip_blacklist
   ip_whitelist = var.ip_whitelist
   name_prefix  = join("-", ["1", local.www_bucket])
+  redirects    = var.waf_redirects
   tags         = local.tags
 }
 

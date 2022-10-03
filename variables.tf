@@ -115,3 +115,13 @@ variable "waf_arn" {
     https://go.s3d.club/aws/site#waf_arn
     END
 }
+
+variable "waf_redirects" {
+  default = null
+  type    = map(string)
+
+  description = <<-END
+    The WAF Redirects
+    https://go.s3d.club/aws/site#waf_redirects
+    END
+}
