@@ -60,7 +60,7 @@ locals {
 module "acm" {
   count      = var.acm_arn == null ? 1 : 0
   depends_on = [aws_route53_record.ns]
-  source     = "github.com/s3d-club/terraform-aws-acm?ref=v0.1.1"
+  source     = "github.com/s3d-club/terraform-aws-acm?ref=v0.1.2"
 
   domain  = local.www_domain
   tags    = local.tags
@@ -68,7 +68,7 @@ module "acm" {
 }
 
 module "name" {
-  source = "github.com/s3d-club/terraform-external-name?ref=v0.1.1"
+  source = "github.com/s3d-club/terraform-external-name?ref=v0.1.2"
 
   context = join(".", [var.cloudfront, var.domain])
   path    = path.module
@@ -77,10 +77,11 @@ module "name" {
 
 module "waf" {
   count  = var.enable_waf ? 1 : 0
-  source = "github.com/s3d-club/terraform-aws-waf?ref=v0.1.1"
+  source = "github.com/s3d-club/terraform-aws-waf?ref=v0.1.2"
 
   ip_blacklist = var.ip_blacklist
   ip_whitelist = var.ip_whitelist
+  kms_key_arn  = var.kms_key_arn
   name_prefix  = join("-", ["1", local.www_bucket])
   redirects    = var.waf_redirects
   tags         = local.tags
@@ -108,18 +109,58 @@ resource "aws_s3_bucket_policy" "www" {
   })
 }
 
+# We do not log or version the log content
+#   tfsec:ignore:aws-s3-enable-versioning
+#   tfsec:ignore:aws-s3-enable-bucket-logging
 resource "aws_s3_bucket" "logs" {
   bucket        = local.log_bucket
   force_destroy = true
   tags          = local.tags
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        kms_master_key_id = var.kms_key_arn
+        sse_algorithm     = "aws:kms"
+      }
+    }
+  }
 }
 
+resource "aws_s3_bucket_public_access_block" "logs" {
+  block_public_acls       = true
+  block_public_policy     = true
+  bucket                  = aws_s3_bucket.logs.id
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+# We do not log or version the www content
+#   tfsec:ignore:aws-s3-enable-versioning
+#   tfsec:ignore:aws-s3-enable-bucket-logging
 resource "aws_s3_bucket" "www" {
   depends_on = [aws_s3_bucket.logs]
 
   tags          = local.tags
   bucket        = local.www_bucket
   force_destroy = true
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        kms_master_key_id = var.kms_key_arn
+        sse_algorithm     = "aws:kms"
+      }
+    }
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "www" {
+  block_public_acls       = true
+  block_public_policy     = true
+  bucket                  = aws_s3_bucket.www.id
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
 
 resource "aws_s3_bucket_website_configuration" "this" {
@@ -146,19 +187,19 @@ resource "aws_cloudfront_distribution" "this" {
   aliases             = [local.www_domain]
   default_root_object = "index.html"
   enabled             = true
-  is_ipv6_enabled     = true
+  is_ipv6_enabled     = var.enable_ip6
   price_class         = var.cloudfront_price_class
   tags                = local.tags
 
   custom_error_response {
-    error_caching_min_ttl = 3000
+    error_caching_min_ttl = 1
     error_code            = 403
     response_code         = 200
     response_page_path    = "/index.html"
   }
 
   custom_error_response {
-    error_caching_min_ttl = 3000
+    error_caching_min_ttl = 1
     error_code            = 404
     response_code         = 200
     response_page_path    = "/index.html"
@@ -180,7 +221,7 @@ resource "aws_cloudfront_distribution" "this" {
   default_cache_behavior {
     allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods         = ["GET", "HEAD"]
-    default_ttl            = 60 * 60 # 1 Hour in seconds
+    default_ttl            = 0
     max_ttl                = 60 * 60 * 24
     min_ttl                = 0
     target_origin_id       = local.s3_origin_id
@@ -202,8 +243,9 @@ resource "aws_cloudfront_distribution" "this" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = coalesce(var.acm_arn, module.acm[0].arn)
-    ssl_support_method  = "sni-only"
+    acm_certificate_arn      = coalesce(var.acm_arn, module.acm[0].arn)
+    minimum_protocol_version = "TLSv1.2_2021"
+    ssl_support_method       = "sni-only"
   }
 }
 

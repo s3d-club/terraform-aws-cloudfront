@@ -4,7 +4,7 @@ variable "acm_arn" {
 
   description = <<-END
     AWS Certificate Manager ARN
-    https://go.s3d.club/site#arn
+    https://go.s3d.club/tf/site#arn
     END
 }
 
@@ -14,7 +14,7 @@ variable "az_blacklist" {
 
   description = <<-END
     The availability zone blacklist
-    https://go.s3d.club/site#az_blacklist
+    https://go.s3d.club/tf/site#az_blacklist
     END
 }
 
@@ -24,7 +24,7 @@ variable "cloudfront" {
 
   description = <<-END
     The subdomain for Cloudfront
-    https://go.s3d.club/site#cloudfront
+    https://go.s3d.club/tf/site#cloudfront
     END
 }
 
@@ -34,7 +34,7 @@ variable "cloudfront_price_class" {
 
   description = <<-END
     The Cloudfront PriceClass
-    https://go.s3d.club/site#cloudfront_price_class
+    https://go.s3d.club/tf/site#cloudfront_price_class
     END
 }
 
@@ -43,7 +43,17 @@ variable "domain" {
 
   description = <<-END
     The `domain` name
-    https://go.s3d.club/site#domain
+    https://go.s3d.club/tf/site#domain
+    END
+}
+
+variable "enable_ip6" {
+  default = false
+  type    = bool
+
+  description = <<-END
+    an option to enable IP6 addressing.
+    https://go.s3d.club/tf/site#enable_ip6
     END
 }
 
@@ -53,7 +63,7 @@ variable "enable_waf" {
 
   description = <<-END
     Enable the WAF (adds costs estimate TBD!)
-    https://go.s3d.club/aws/site#enable_waf
+    https://go.s3d.club/tf/site#enable_waf
     END
 }
 
@@ -63,7 +73,17 @@ variable "favicon" {
 
   description = <<-END
     Favicon path _(or `null` to disable)_
-    https://go.s3d.club/site#favicon
+    https://go.s3d.club/tf/site#favicon
+    END
+}
+
+variable "kms_key_arn" {
+  default = "DEFAULT"
+  type    = string
+
+  description = <<-END
+    KMS key arn
+    https://go.s3d.club/tf/site#kms_key_arn
     END
 }
 
