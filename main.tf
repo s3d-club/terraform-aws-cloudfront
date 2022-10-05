@@ -1,13 +1,10 @@
 data "aws_route53_zone" "this" {
-  name = local.domain_base
+  name = var.domain
 }
 
 locals {
   waf_input         = var.waf_arn != null
   waf_not_needed    = (var.ip_whitelist == null)
-  domain_base_slice = slice(local.domain_split, 1, local.domain_split_len)
-  domain_split      = split(".", var.domain)
-  domain_split_len  = length(local.domain_split)
   index_html_source = "${path.module}/index.html"
   log_bucket        = "${local.www_bucket}-log"
   name_prefix       = module.name.prefix
@@ -16,48 +13,20 @@ locals {
   waf               = try(module.waf[0], null)
   waf_arn           = var.waf_arn == null ? try(local.waf.arn, null) : var.waf_arn
   website           = "https://${local.www_domain}"
-  www_domain        = "${var.cloudfront}.${var.domain}"
-
-  # The default favicon (may not be used depending on va )
-  default_favicon = (
-    "${path.module}/favicon.ico.png"
-  )
-
-  # For top level domains the domain is it's own base
-  domain_base = (
-    local.domain_is_top_level ? var.domain : join(".", local.domain_base_slice)
-  )
-
-  # If a domain base is only a two part domain that means it is a top level and
-  # as such we should not create a subdomain.
-  domain_is_top_level = (
-    local.domain_split_len == 2
-  )
+  www_domain        = "${var.name}.${var.domain}"
+  zone_id           = data.aws_route53_zone.this.id
+  www_bucket        = substr(local.name_prefix, 0, 60)
+  default_favicon   = "${path.module}/favicon.ico.png"
 
   # See description of the "fav_icon" variable.
   favicon = (
     var.favicon == "DEFAULT" ? local.default_favicon : var.favicon
   )
-
-  # We will not have a subdomain zone if top level domain.
-  subdomain_zone = (
-    try(aws_route53_zone.sub[0], null)
-  )
-
-  # Top level domain we use zone_id from base.
-  # On subdomains we use the zone_id from the resource we create
-  zone_id = (
-    local.domain_is_top_level ? data.aws_route53_zone.this.id : aws_route53_zone.sub[0].zone_id
-  )
-
-  # In our bucket uses our s3 prefix, cloudfront, and www
-  www_bucket = substr(local.name_prefix, 0, 60)
 }
 
 module "acm" {
-  count      = var.acm_arn == null ? 1 : 0
-  depends_on = [aws_route53_record.ns]
-  source     = "github.com/s3d-club/terraform-aws-acm?ref=v0.1.3"
+  count  = var.acm_arn == null ? 1 : 0
+  source = "github.com/s3d-club/terraform-aws-acm?ref=v0.1.3"
 
   domain  = local.www_domain
   tags    = local.tags
@@ -67,7 +36,7 @@ module "acm" {
 module "name" {
   source = "github.com/s3d-club/terraform-external-name?ref=v0.1.3"
 
-  context = join(".", [var.cloudfront, var.domain])
+  context = join(".", [var.name, var.domain])
   path    = path.module
   tags    = var.tags
 }
@@ -85,7 +54,7 @@ module "waf" {
 }
 
 resource "aws_route53_record" "www" {
-  name    = var.cloudfront
+  name    = var.name
   records = [aws_cloudfront_distribution.this.domain_name]
   ttl     = 300
   type    = "CNAME"
@@ -267,22 +236,3 @@ resource "aws_s3_object" "favicon" {
   key          = "favicon.ico"
   source       = local.favicon
 }
-
-resource "aws_route53_zone" "sub" {
-  count = local.domain_is_top_level ? 0 : 1
-
-  tags = local.tags
-  name = var.domain
-}
-
-resource "aws_route53_record" "ns" {
-  count = local.domain_is_top_level ? 0 : 1
-
-  allow_overwrite = true
-  name            = var.domain
-  records         = local.subdomain_zone.name_servers
-  ttl             = 60 * 3
-  type            = "NS"
-  zone_id         = data.aws_route53_zone.this.zone_id
-}
-

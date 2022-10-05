@@ -9,3 +9,6 @@ Recently completed and planned work is tracked here.
 - Updated `acm` module
 - Updated `name` module
 - Updated `waf` module
+
+## [0.1.5](.)
+- Simplified system to require domain to already have a hosted zone

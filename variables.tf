@@ -18,16 +18,6 @@ variable "az_blacklist" {
     END
 }
 
-variable "cloudfront" {
-  default = "www"
-  type    = string
-
-  description = <<-END
-    The subdomain for Cloudfront
-    https://go.s3d.club/tf/site#cloudfront
-    END
-}
-
 variable "cloudfront_price_class" {
   default = "PriceClass_100"
   type    = string
@@ -77,16 +67,6 @@ variable "favicon" {
     END
 }
 
-variable "kms_key_arn" {
-  default = "DEFAULT"
-  type    = string
-
-  description = <<-END
-    KMS key arn
-    https://go.s3d.club/tf/site#kms_key_arn
-    END
-}
-
 variable "ip_blacklist" {
   default = null
   type    = list(string)
@@ -104,6 +84,26 @@ variable "ip_whitelist" {
   description = <<-END
     The IP Whitelist
     https://go.s3d.club/site#ip_whitelist
+    END
+}
+
+variable "kms_key_arn" {
+  default = "DEFAULT"
+  type    = string
+
+  description = <<-END
+    KMS key arn
+    https://go.s3d.club/tf/site#kms_key_arn
+    END
+}
+
+variable "name" {
+  default = "www"
+  type    = string
+
+  description = <<-END
+    The subdomain for Cloudfront
+    https://go.s3d.club/tf/site#name
     END
 }
 
