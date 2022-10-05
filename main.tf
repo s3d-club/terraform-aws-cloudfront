@@ -9,7 +9,6 @@ locals {
   domain_split      = split(".", var.domain)
   domain_split_len  = length(local.domain_split)
   index_html_source = "${path.module}/index.html"
-  kms_key_id        = null
   log_bucket        = "${local.www_bucket}-log"
   name_prefix       = module.name.prefix
   s3_origin_id      = "s3"
@@ -52,9 +51,7 @@ locals {
   )
 
   # In our bucket uses our s3 prefix, cloudfront, and www
-  www_bucket = join("-", flatten([
-    local.name_prefix, var.cloudfront, split(".", var.domain)
-  ]))
+  www_bucket = substr(local.name_prefix, 0, 60)
 }
 
 module "acm" {
@@ -95,36 +92,15 @@ resource "aws_route53_record" "www" {
   zone_id = local.zone_id
 }
 
-resource "aws_s3_bucket_policy" "www" {
-  bucket = aws_s3_bucket.www.id
-
-  policy = jsonencode({ Version = "2012-10-17"
-    Statement = [{
-      Action    = "s3:GetObject"
-      Effect    = "Allow"
-      Principal = "*"
-      Resource  = join("", ["arn:aws:s3:::", local.www_bucket, "/*"])
-      Sid       = "PublicReadGetObject"
-    }]
-  })
-}
-
-# We do not log or version the log content
-#   tfsec:ignore:aws-s3-enable-versioning
+# We do not log or version the log content; (that would be silly!)
+#   tfsec:ignore:aws-s3-enable-bucket-encryption
 #   tfsec:ignore:aws-s3-enable-bucket-logging
+#   tfsec:ignore:aws-s3-enable-versioning
+#   tfsec:ignore:aws-s3-encryption-customer-key
 resource "aws_s3_bucket" "logs" {
   bucket        = local.log_bucket
   force_destroy = true
   tags          = local.tags
-
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        kms_master_key_id = var.kms_key_arn
-        sse_algorithm     = "aws:kms"
-      }
-    }
-  }
 }
 
 resource "aws_s3_bucket_public_access_block" "logs" {
@@ -136,25 +112,46 @@ resource "aws_s3_bucket_public_access_block" "logs" {
 }
 
 # We do not log or version the www content
-#   tfsec:ignore:aws-s3-enable-versioning
+#   tfsec:ignore:aws-s3-enable-bucket-encryption
 #   tfsec:ignore:aws-s3-enable-bucket-logging
+#   tfsec:ignore:aws-s3-enable-versioning
+#   tfsec:ignore:aws-s3-encryption-customer-key
 resource "aws_s3_bucket" "www" {
   depends_on = [aws_s3_bucket.logs]
 
   tags          = local.tags
   bucket        = local.www_bucket
   force_destroy = true
-
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        kms_master_key_id = var.kms_key_arn
-        sse_algorithm     = "aws:kms"
-      }
-    }
-  }
 }
 
+resource "aws_s3_bucket_policy" "www" {
+  bucket = aws_s3_bucket.www.id
+
+  policy = jsonencode({
+    Id      = "PolicyForCloudFrontPrivateContent"
+    Version = "2008-10-17"
+
+    Statement = [{
+      Action    = "s3:GetObject"
+      Effect    = "Allow"
+      Principal = { Service = "cloudfront.amazonaws.com" }
+      Resource  = "arn:aws:s3:::${local.www_bucket}/*",
+      Sid       = "AllowCloudFrontServicePrincipal"
+
+      Condition = {
+        StringEquals = {
+          "AWS:SourceArn" = aws_cloudfront_distribution.this.arn
+        }
+      }
+    }]
+  })
+}
+
+# It is fine if the bucket is public because it is web content
+# tfsec:ignore:aws-s3-block-public-acls
+# tfsec:ignore:aws-s3-block-public-policy
+# tfsec:ignore:aws-s3-ignore-public-acls
+# tfsec:ignore:aws-s3-no-public-buckets
 resource "aws_s3_bucket_public_access_block" "www" {
   block_public_acls       = true
   block_public_policy     = true
@@ -177,7 +174,7 @@ resource "aws_s3_bucket_acl" "logs" {
 }
 
 resource "aws_cloudfront_origin_access_identity" "this" {
-  comment = "Managed by the S3D Club Site TF Module"
+  comment = "Managed TF Module"
 }
 
 resource "aws_cloudfront_distribution" "this" {
@@ -206,12 +203,9 @@ resource "aws_cloudfront_distribution" "this" {
   }
 
   origin {
-    domain_name = aws_s3_bucket.www.bucket_regional_domain_name
-    origin_id   = local.s3_origin_id
-
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.this.cloudfront_access_identity_path
-    }
+    domain_name              = aws_s3_bucket.www.bucket_regional_domain_name
+    origin_access_control_id = aws_cloudfront_origin_access_control.this.id
+    origin_id                = local.s3_origin_id
   }
 
   logging_config {
@@ -247,6 +241,14 @@ resource "aws_cloudfront_distribution" "this" {
     minimum_protocol_version = "TLSv1.2_2021"
     ssl_support_method       = "sni-only"
   }
+}
+
+resource "aws_cloudfront_origin_access_control" "this" {
+  name                              = local.name_prefix
+  description                       = ""
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
 }
 
 resource "time_sleep" "for_s3_async_creation" {
