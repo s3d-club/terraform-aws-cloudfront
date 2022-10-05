@@ -88,8 +88,7 @@ variable "ip_whitelist" {
 }
 
 variable "kms_key_arn" {
-  default = "DEFAULT"
-  type    = string
+  type = string
 
   description = <<-END
     KMS key arn

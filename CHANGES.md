@@ -12,3 +12,6 @@ Recently completed and planned work is tracked here.
 
 ## [0.1.5](.)
 - Simplified system to require domain to already have a hosted zone
+
+## [0.1.6](.)
+- Removed invalid default for `kms_key_arn`
