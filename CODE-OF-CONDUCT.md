@@ -1,6 +1,3 @@
----
-sidebar_position: 2
----
 # Code of Conduct
 Participation in this project must be a harassment-free experience for
 everyone, regardless of age, body size, disability, ethnicity, gender identity
@@ -31,8 +28,6 @@ when an individual is representing the S3D club.
 Club members who do not follow this code of conduct will be removed.
 
 ## Attribution
-This Code of Conduct is adapted from the [Contributor Covenant][homepage],
-version 1.4.
+This Code of Conduct is adapted from the [Contributor Covenant][cont].
 
-[homepage]: http://contributor-covenant.org
-[version]: http://contributor-covenant.org/version/1/4/
+[cont]: https://www.contributor-covenant.org/
