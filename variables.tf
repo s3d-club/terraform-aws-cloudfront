@@ -116,6 +116,16 @@ variable "s3_prefix" {
     END
 }
 
+variable "subject_alternative_names" {
+  default = []
+  type    = list(string)
+
+  description = <<-END
+    Subject alternative names
+    https://go.s3d.club/aws/site#subject_alternative_names
+    END
+}
+
 variable "tags" {
   type = map(string)
 

@@ -26,11 +26,12 @@ locals {
 
 module "acm" {
   count  = var.acm_arn == null ? 1 : 0
-  source = "github.com/s3d-club/terraform-aws-acm?ref=v0.1.3"
+  source = "github.com/s3d-club/terraform-aws-acm?ref=v0.1.4"
 
-  domain  = local.www_domain
-  tags    = local.tags
-  zone_id = local.zone_id
+  domain                    = local.www_domain
+  tags                      = local.tags
+  subject_alternative_names = var.subject_alternative_names
+  zone_id                   = local.zone_id
 }
 
 module "name" {
