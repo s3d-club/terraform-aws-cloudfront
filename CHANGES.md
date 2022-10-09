@@ -7,3 +7,6 @@ Recently completed and planned work is tracked here.
 ## [0.1.7](.)
 - Added `subject_alternative_names` variable
 - Updated `acm` module to support `subject_alternative_name`
+
+## [0.1.8](.)
+- Updated `CODE-OF-CONDUCT.md`

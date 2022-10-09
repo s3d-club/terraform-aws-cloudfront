@@ -5,7 +5,6 @@ and expression, level of experience, nationality, personal appearance, race,
 religion, or sexual identity and orientation.
 
 ## Our Standards
-We encurage:
 - Welcoming and inclusive language
 - Respecting viewpoints and experiences of others
 - Accepting constructive criticism
@@ -22,7 +21,7 @@ needed maintainers will take appropriate and fair corrective action.
 
 ## Scope
 This Code of Conduct applies both within project spaces and in public spaces
-when an individual is representing the S3D club.
+when an individual is representing this project.
 
 ## Enforcement
 Club members who do not follow this code of conduct will be removed.
