@@ -1,12 +1,12 @@
 # Changes
 Recently completed and planned work is tracked here.
 
-## [0.0.1](.) to [0.1.6](.)
+## [0.0.1](.) to [0.1.8](.)
 - Created early versions
 
-## [0.1.7](.)
-- Added `subject_alternative_names` variable
-- Updated `acm` module to support `subject_alternative_name`
-
-## [0.1.8](.)
-- Updated `CODE-OF-CONDUCT.md`
+## [0.1.9](.)
+- Fixed typo in `README.md`
+- Removed Darwin hashes from `.terraform.lock.hcl`
+- Updated `aws` provider
+- Updated `time` provider
+- Updated modules

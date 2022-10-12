@@ -1,10 +1,10 @@
-# The Site Module
-This module defines a website..
+# Site Module
+This module defines a website.
 
 ## Other Documents
 Please read our [LICENSE][lice], [CONTRIBUTING][cont], [CODE-OF-CONDUCT][code],
 and [CHANGES][chge] documents before working in this project and anytime they
-are update.
+are updated.
 
 ## Overview
 This module defines our concept of a **site**.
