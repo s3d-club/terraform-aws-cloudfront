@@ -6,3 +6,9 @@ Recently completed and planned work is tracked here.
 
 ## [0.1.13](.)
 - Removed dependency on `s3d-flow-json`
+
+## [0.1.14](.)
+- Improved descriptions of variables and outputs
+- Updated `acm` module
+- Updated `name` module
+- Updated `waf` module

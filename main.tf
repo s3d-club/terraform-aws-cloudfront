@@ -3,20 +3,17 @@ data "aws_route53_zone" "this" {
 }
 
 locals {
-  waf_input         = var.waf_arn != null
-  waf_not_needed    = (var.ip_whitelist == null)
-  index_html_source = "${path.module}/index.html"
-  log_bucket        = "${local.www_bucket}-log"
-  name_prefix       = module.name.prefix
-  s3_origin_id      = "s3"
-  tags              = module.name.tags
-  waf               = try(module.waf[0], null)
-  waf_arn           = var.waf_arn == null ? try(local.waf.arn, null) : var.waf_arn
-  website           = "https://${local.www_domain}"
-  www_domain        = "${var.name}.${var.domain}"
-  zone_id           = data.aws_route53_zone.this.id
-  www_bucket        = substr(local.name_prefix, 0, 60)
-  default_favicon   = "${path.module}/favicon.ico.png"
+  log_bucket      = "${local.www_bucket}-log"
+  name_prefix     = module.name.prefix
+  s3_origin_id    = "s3"
+  tags            = module.name.tags
+  waf             = try(module.waf[0], null)
+  waf_arn         = var.waf_arn == null ? try(local.waf.arn, null) : var.waf_arn
+  website         = "https://${local.www_domain}"
+  www_domain      = "${var.name}.${var.domain}"
+  zone_id         = data.aws_route53_zone.this.id
+  www_bucket      = substr(local.name_prefix, 0, 60)
+  default_favicon = "${path.module}/favicon.ico.png"
 
   # See description of the "fav_icon" variable.
   favicon = (
@@ -26,16 +23,15 @@ locals {
 
 module "acm" {
   count  = var.acm_arn == null ? 1 : 0
-  source = "github.com/s3d-club/terraform-aws-acm?ref=v0.1.13"
+  source = "github.com/s3d-club/terraform-aws-acm?ref=v0.1.16"
 
   domain                    = local.www_domain
   tags                      = local.tags
   subject_alternative_names = var.subject_alternative_names
-  zone_id                   = local.zone_id
 }
 
 module "name" {
-  source = "github.com/s3d-club/terraform-external-name?ref=v0.1.10"
+  source = "github.com/s3d-club/terraform-external-name?ref=v0.1.14"
 
   context = join(".", [var.name, var.domain])
   path    = path.module
@@ -44,7 +40,7 @@ module "name" {
 
 module "waf" {
   count  = var.enable_waf ? 1 : 0
-  source = "github.com/s3d-club/terraform-aws-waf?ref=v0.1.10"
+  source = "github.com/s3d-club/terraform-aws-waf?ref=v0.1.11"
 
   ip_blacklist = var.ip_blacklist
   ip_whitelist = var.ip_whitelist

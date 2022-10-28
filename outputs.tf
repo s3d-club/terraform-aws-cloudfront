@@ -2,8 +2,7 @@ output "domain" {
   value = var.domain
 
   description = <<-END
-		The Site's Domain
-		https://go.s3d.com/aws/site#domain
+    The site's Domain.
     END
 }
 
@@ -14,8 +13,7 @@ output "urls" {
   }
 
   description = <<-END
-    URLs for the website
-		https://go.s3d.com/aws/site#urls
+    The URLs for the website.
     END
 }
 
@@ -23,7 +21,6 @@ output "waf_arn" {
   value = local.waf_arn
 
   description = <<-END
-    The WAF ARN
-		https://go.s3d.com/aws/site#waf_arn
+    The WAF ARN.
     END
 }
