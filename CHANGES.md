@@ -11,11 +11,10 @@ This file describes the project history as it relates to tagged versions.
 - Updated `name` module
 - Updated `waf` module
 
-## [0.1.17](.)
+## [0.1.17](.) to  [0.1.18](.)
 - Sorted `main.tf`
 - Upgraded `acm` module
 - Upgraded `name` module
 - Upgraded `terraform` version
 - Upgraded `time` provider
 - Upgraded `waf` module
-
