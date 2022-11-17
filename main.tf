@@ -194,19 +194,6 @@ resource "aws_s3_bucket_policy" "www" {
           }
         }
       },
-      {
-        Action    = ["s3:ListBucket"]
-        Effect    = "Allow"
-        Principal = { Service = "cloudfront.amazonaws.com" }
-        Resource  = "arn:aws:s3:::${local.www_bucket}",
-        Sid       = "AllowCloudFrontServicePrincipal"
-
-        Condition = {
-          StringEquals = {
-            "AWS:SourceArn" = aws_cloudfront_distribution.this.arn
-          }
-        }
-      },
     ]
   })
 }

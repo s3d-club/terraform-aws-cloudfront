@@ -31,3 +31,6 @@ This file describes the project history as it relates to tagged versions.
 - Added `default_root_object` variable
 - Added `single_page_application` variable
 - Added `www_bucket` variable
+
+## [0.1.21](.)
+- Removed unnecessary `s3:ListBucket` permission
