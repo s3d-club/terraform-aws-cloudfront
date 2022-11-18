@@ -11,7 +11,7 @@ This file describes the project history as it relates to tagged versions.
 - Updated `name` module
 - Updated `waf` module
 
-## [0.1.17](.) to [0.1.18](.)
+## [0.1.17](.) to [0.1.22](.)
 - Added `default_root_object` variable
 - Added `single_page_application` variable
 - Added `www_bucket` variable
@@ -24,5 +24,5 @@ This file describes the project history as it relates to tagged versions.
 - Updated `time` provider
 - Updated `waf` module
 
-## [0.1.22](.)
-- Reformated `terraform.tf`
+## [0.1.23](.)
+- Updated `aws` provider
