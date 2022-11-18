@@ -12,25 +12,17 @@ This file describes the project history as it relates to tagged versions.
 - Updated `waf` module
 
 ## [0.1.17](.) to [0.1.18](.)
+- Added `default_root_object` variable
+- Added `single_page_application` variable
+- Added `www_bucket` variable
 - Sorted `main.tf`
 - Updated `acm` module
+- Updated `aws` provider
+- Updated `external` provider
 - Updated `name` module
 - Updated `terraform` version
 - Updated `time` provider
 - Updated `waf` module
 
-## [0.1.19](.)
-- Updated `acm` module
-- Updated `aws` provider
-- Updated `external` provider
-- Updated `name` module
-- Updated `time` provider
-- Updated `waf` module
-
-## [0.1.20](.)
-- Added `default_root_object` variable
-- Added `single_page_application` variable
-- Added `www_bucket` variable
-
-## [0.1.21](.)
-- Removed unnecessary `s3:ListBucket` permission
+## [0.1.22](.)
+- Reformated `terraform.tf`
