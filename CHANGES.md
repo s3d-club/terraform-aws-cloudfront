@@ -24,5 +24,5 @@ This file describes the project history as it relates to tagged versions.
 - Updated `time` provider
 - Updated `waf` module
 
-## [0.1.23](.)
+## [0.1.23](.) to [0.1.24](.)
 - Updated `aws` provider

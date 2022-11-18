@@ -40,7 +40,7 @@ module "name" {
 
 module "waf" {
   count  = var.enable_waf ? 1 : 0
-  source = "github.com/s3d-club/terraform-aws-waf?ref=v0.1.17"
+  source = "github.com/s3d-club/terraform-aws-waf?ref=v0.1.18"
 
   ip_blacklist = var.ip_blacklist
   ip_whitelist = var.ip_whitelist
