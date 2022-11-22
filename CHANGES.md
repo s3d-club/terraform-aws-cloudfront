@@ -7,22 +7,14 @@ This file describes the project history as it relates to tagged versions.
 ## [0.1.13](.) to [0.1.16](.)
 - Fixed `aws_route53_zone` data lookup
 - Improved descriptions of variables and outputs
-- Updated `acm` module
-- Updated `name` module
-- Updated `waf` module
+- Updated modules
 
-## [0.1.17](.) to [0.1.22](.)
+## [0.1.17](.) to [0.1.24](.)
 - Added `default_root_object` variable
 - Added `single_page_application` variable
 - Added `www_bucket` variable
 - Sorted `main.tf`
-- Updated `acm` module
-- Updated `aws` provider
-- Updated `external` provider
-- Updated `name` module
-- Updated `terraform` version
-- Updated `time` provider
-- Updated `waf` module
+- Updated modules and providers
 
-## [0.1.23](.) to [0.1.24](.)
-- Updated `aws` provider
+## [0.1.25](.)
+- Updated docs
