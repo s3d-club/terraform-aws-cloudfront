@@ -9,12 +9,13 @@ This file describes the project history as it relates to tagged versions.
 - Improved descriptions of variables and outputs
 - Updated modules
 
-## [0.1.17](.) to [0.1.24](.)
+## [0.1.17](.) to [0.1.25](.)
 - Added `default_root_object` variable
 - Added `single_page_application` variable
 - Added `www_bucket` variable
 - Sorted `main.tf`
 - Updated modules and providers
-
-## [0.1.25](.)
 - Updated docs
+
+## [0.1.26](.)
+- Updated `acm` module
