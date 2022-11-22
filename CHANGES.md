@@ -17,5 +17,5 @@ This file describes the project history as it relates to tagged versions.
 - Updated modules and providers
 - Updated docs
 
-## [0.1.26](.)
+## [0.1.26](.) to [0.1.27](.)
 - Updated `acm` module
