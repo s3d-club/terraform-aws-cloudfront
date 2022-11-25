@@ -14,8 +14,8 @@ This file describes the project history as it relates to tagged versions.
 - Added `single_page_application` variable
 - Added `www_bucket` variable
 - Sorted `main.tf`
-- Updated modules and providers
+- Updated providers and modules
 - Updated docs
 
-## [0.1.26](.) to [0.1.27](.)
-- Updated `acm` module
+## [0.1.26](.) to [0.1.28](.)
+- Updated `aws` provider
