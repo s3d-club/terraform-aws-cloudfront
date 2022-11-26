@@ -17,5 +17,5 @@ This file describes the project history as it relates to tagged versions.
 - Updated providers and modules
 - Updated docs
 
-## [0.1.26](.) to [0.1.28](.)
+## [0.1.26](.) to [0.1.29](.)
 - Updated `aws` provider
