@@ -23,5 +23,5 @@ This file describes the project history as it relates to tagged versions.
 - Added `website` output
 - Removed `urls` output
 
-## [1.0.1](.) to [1.0.2](.)
+## [1.0.1](.) to [1.0.3](.)
 - Updated `required_version`

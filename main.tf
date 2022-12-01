@@ -23,7 +23,7 @@ locals {
 
 module "acm" {
   count  = var.acm_arn == null ? 1 : 0
-  source = "github.com/s3d-club/terraform-aws-acm?ref=v4.2000.10"
+  source = "github.com/s3d-club/terraform-aws-acm?ref=v4.2000.11"
 
   domain                    = local.www_domain
   tags                      = local.tags
@@ -40,7 +40,7 @@ module "name" {
 
 module "waf" {
   count  = var.enable_waf ? 1 : 0
-  source = "github.com/s3d-club/terraform-aws-waf?ref=v0.1.21"
+  source = "github.com/s3d-club/terraform-aws-waf?ref=v0.1.22"
 
   ip_blacklist = var.ip_blacklist
   ip_whitelist = var.ip_whitelist
