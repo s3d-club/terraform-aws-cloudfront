@@ -14,14 +14,14 @@ This file describes the project history as it relates to tagged versions.
 - Added `single_page_application` variable
 - Added `www_bucket` variable
 - Sorted `main.tf`
-- Updated providers and modules
-- Updated docs
+- Updated docs, providers and modules
 
 ## [0.1.26](.) to [1.0.0](.)
-- Updated `aws` provider
 - Added `s3_bucket` output
 - Added `website` output
 - Removed `urls` output
+- Updated `aws` provider
 
 ## [1.0.1](.) to [1.0.3](.)
+- Updated `aws` provider
 - Updated `required_version`
