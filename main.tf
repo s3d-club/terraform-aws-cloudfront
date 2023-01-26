@@ -31,7 +31,7 @@ module "acm" {
 }
 
 module "name" {
-  source = "github.com/s3d-club/terraform-external-name?ref=v1.0.1"
+  source = "github.com/s3d-club/terraform-external-name?ref=v1.0.0"
 
   context = join(".", [var.name, var.domain])
   path    = path.module
