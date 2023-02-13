@@ -1,8 +1,5 @@
 # Changes
 This file describes the project history as it relates to tagged versions.
 
-## [0.0.1](.) to [1.1.0](.)
-- Created release
-
-## [1.1.1](.)
-- Merged with the main branch
+## 1.0.0 to 1.2.0
+- Updated version
