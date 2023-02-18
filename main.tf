@@ -10,7 +10,7 @@ locals {
   waf             = try(module.waf[0], null)
   waf_arn         = var.waf_arn == null ? try(local.waf.arn, null) : var.waf_arn
   website         = "https://${local.www_domain}"
-  www_domain      = "${var.name}.${var.domain}"
+  www_domain      = var.name == null ? var.domain : "${var.name}.${var.domain}"
   zone_id         = data.aws_route53_zone.this.id
   www_bucket      = coalesce(var.www_bucket, substr(local.name_prefix, 0, 60))
   default_favicon = "${path.module}/favicon.ico.png"
