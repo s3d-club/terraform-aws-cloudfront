@@ -137,10 +137,10 @@ resource "aws_cloudfront_origin_access_identity" "this" {
 }
 
 resource "aws_route53_record" "www" {
-  name    = var.name
+  name    = var.name == null ? "" : var.name
   records = [aws_cloudfront_distribution.this.domain_name]
   ttl     = 300
-  type    = "CNAME"
+  type    = "A"
   zone_id = local.zone_id
 }
 
