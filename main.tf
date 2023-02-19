@@ -137,11 +137,17 @@ resource "aws_cloudfront_origin_access_identity" "this" {
 }
 
 resource "aws_route53_record" "www" {
-  name    = var.name == null ? "" : var.name
-  records = [aws_cloudfront_distribution.this.domain_name]
-  ttl     = 300
-  type    = "A"
-  zone_id = local.zone_id
+  multivalue_answer_routing_policy = false
+  name                             = var.name == null ? var.domain : var.name
+  set_identifier                   = ""
+  type                             = "A"
+  zone_id                          = local.zone_id
+
+  alias {
+    evaluate_target_health = false
+    name                   = aws_cloudfront_distribution.this.domain_name
+    zone_id                = local.zone_id
+  }
 }
 
 # We do not log or version the log content; (that would be silly!)
