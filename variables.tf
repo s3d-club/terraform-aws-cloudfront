@@ -16,6 +16,11 @@ variable "cloudfront_price_class" {
     EOT
 }
 
+variable "cloudfront_zone_id" {
+  default = "Z2FDTNDATAQYW2"
+  type    = string
+}
+
 variable "default_root_object" {
   default = "index.html"
   type    = string

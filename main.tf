@@ -146,7 +146,7 @@ resource "aws_route53_record" "www" {
   alias {
     evaluate_target_health = false
     name                   = aws_cloudfront_distribution.this.domain_name
-    zone_id                = local.zone_id
+    zone_id                = var.cloudfront_zone_id
   }
 }
 
