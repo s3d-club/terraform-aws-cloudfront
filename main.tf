@@ -33,7 +33,7 @@ module "acm" {
 module "name" {
   source = "github.com/s3d-club/terraform-external-data-name-tags?ref=v1.1.0"
 
-  context = join(".", [var.name, var.domain])
+  context = var.name == null ? var.domain : join(".", [var.name, var.domain])
   path    = path.module
   tags    = var.tags
 }
