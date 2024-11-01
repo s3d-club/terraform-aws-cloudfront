@@ -180,7 +180,7 @@ resource "aws_s3_bucket_acl" "logs" {
 }
 
 resource "aws_s3_bucket_ownership_controls" "logs" {
-  bucket = aws_s3_bucket_acl.logs.id
+  bucket = aws_s3_bucket.logs.id
 
   rule {
     object_ownership = "BucketOwnerPreferred"
