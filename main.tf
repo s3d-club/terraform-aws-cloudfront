@@ -173,6 +173,14 @@ resource "aws_s3_bucket_acl" "logs" {
   bucket = aws_s3_bucket.logs.id
 }
 
+resource "aws_s3_bucket_ownership_controls" "logs" {
+  bucket = aws_s3_bucket_acl.logs.id
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
 resource "aws_s3_bucket_policy" "www" {
   bucket = aws_s3_bucket.www.id
 
