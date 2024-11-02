@@ -175,6 +175,8 @@ resource "aws_s3_bucket" "www" {
 }
 
 resource "aws_s3_bucket_acl" "logs" {
+  depends_on = [aws_s3_bucket_ownership_controls.logs]
+
   acl    = "private"
   bucket = aws_s3_bucket.logs.id
 }
